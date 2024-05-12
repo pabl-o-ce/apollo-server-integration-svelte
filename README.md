@@ -1,58 +1,70 @@
-# create-svelte
+# Apollo Server Integration for SvelteKit
 
-Everything you need to build a Svelte library, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+[![npm version](https://badge.fury.io/js/apollo-server-integration-svelte.svg)](https://badge.fury.io/js/apollo-server-integration-svelte)
 
-Read more about creating a library [in the docs](https://kit.svelte.dev/docs/packaging).
+This package provides an integration for using [Apollo Server](https://www.apollographql.com/docs/apollo-server/) with [SvelteKit](https://kit.svelte.dev/). It allows you to easily set up a GraphQL server within your SvelteKit application.
 
-## Creating a project
+## Installation
 
-If you're seeing this, you've probably already done this step. Congrats!
+To install the package, run the following command:
 
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+npm install apollo-server-integration-svelte
 ```
 
-## Developing
+## Usage
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+1. Create a new file named `+server.ts` inside the `src/routes/graphql` directory of your SvelteKit project.
+
+2. Import the necessary modules and define your GraphQL schema and resolvers:
+
+```typescript
+import { startServerAndCreateSvelteKitHandler } from 'apollo-server-integration-svelte';
+import { ApolloServer } from '@apollo/server';
+import type { BaseContext } from '@apollo/server';
+import { typeDefs } from '$lib/graphql/schema';
+import { resolvers } from '$lib/graphql/resolvers';
+import type { RequestHandler } from './$types';
+
+const server = new ApolloServer<BaseContext>({
+  typeDefs,
+  resolvers,
+});
+
+export const POST: RequestHandler = startServerAndCreateSvelteKitHandler(server);
+export const GET: RequestHandler = startServerAndCreateSvelteKitHandler(server);
+```
+
+3. Create your GraphQL schema and resolvers in separate files, such as `src/lib/graphql/schema.ts` and `src/lib/graphql/resolvers.ts`.
+
+4. Start your SvelteKit development server:
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+5. Access your GraphQL endpoint at `http://localhost:5173/graphql` (or the appropriate URL based on your SvelteKit configuration).
 
-## Building
+## API
 
-To build your library:
+### `startServerAndCreateSvelteKitHandler(server, options?)`
 
-```bash
-npm run package
-```
+This function takes an instance of `ApolloServer` and optional `options` and returns a request handler that can be used as a SvelteKit server route handler.
 
-To create a production version of your showcase app:
+- `server`: An instance of `ApolloServer` configured with your GraphQL schema and resolvers.
+- `options` (optional): An object containing additional options for the handler.
+  - `context` (optional): A function that returns a custom context object for each request.
 
-```bash
-npm run build
-```
+## Contributing
 
-You can preview the production build with `npm run preview`.
+Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request on the [GitHub repository](https://github.com/pabl-o-ce/apollo-server-integration-svelte).
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## License
 
-## Publishing
+This package is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
+## Acknowledgements
 
-To publish your library to [npm](https://www.npmjs.com):
+This package is inspired by the official [apollo-server-integration-next](https://www.npmjs.com/package/apollo-server-integration-next) package and adapted for SvelteKit.
 
-```bash
-npm publish
-```
+Special thanks to the Apollo Server and SvelteKit communities for their excellent work.
