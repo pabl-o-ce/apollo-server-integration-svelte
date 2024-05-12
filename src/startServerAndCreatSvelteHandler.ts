@@ -1,9 +1,10 @@
-import { ApolloServer, BaseContext, ContextFunction } from '@apollo/server';
+import { ApolloServer } from '@apollo/server';
+import type { BaseContext, ContextFunction } from '@apollo/server';
 import type { RequestEvent } from '@sveltejs/kit';
 import { parse } from 'url';
 import { getBody } from './lib/getBody';
 import { getHeaders } from './lib/getHeaders';
-import { isSvelteApiRequest } from './lib/isServerSideRequest';
+import { isSvelteApiRequest } from './lib/isSvelteApiRequest';
 
 interface Options<Context extends BaseContext> {
   context?: ContextFunction<[RequestEvent], Context>;
