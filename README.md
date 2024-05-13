@@ -1,6 +1,7 @@
 # Apollo Server Integration for SvelteKit
 
-[![npm version](https://badge.fury.io/js/apollo-server-integration-svelte.svg)](https://badge.fury.io/js/apollo-server-integration-svelte)
+[![NPM Version](https://img.shields.io/npm/v/apollo-server-integration-svelte?logo=npm&logoColor=%23ffffff&color=%234ec820)
+](https://badge.fury.io/js/apollo-server-integration-svelte)
 
 This package provides an integration for using [Apollo Server](https://www.apollographql.com/docs/apollo-server/) with [SvelteKit](https://kit.svelte.dev/). It allows you to easily set up a GraphQL server within your SvelteKit application.
 
