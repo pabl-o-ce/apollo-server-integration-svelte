@@ -55,6 +55,7 @@
 		"vitest": "^1.2.0"
 	},
     "author": "Pablo Carrera <poscye@protonmail.com>",
+    "license": "MIT",
     "description": "This package provides an integration for using Apollo Server with SvelteKit. It allows you to easily set up a GraphQL server within your SvelteKit application.",
     "keywords": [
         "npm",
