@@ -1,1 +1,1 @@
-export * from './startServerAndCreatSvelteHandler.ts'
+export * from './startServerAndCreatSvelteHandler.js'
