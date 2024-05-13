@@ -12,39 +12,64 @@ To install the package, run the following command:
 npm install apollo-server-integration-svelte
 ```
 
-## Usage
+## Getting started
 
 1. Create a new file named `+server.ts` inside the `src/routes/graphql` directory of your SvelteKit project.
 
 2. Import the necessary modules and define your GraphQL schema and resolvers:
 
 ```typescript
-import { startServerAndCreateSvelteKitHandler } from 'apollo-server-integration-svelte';
 import { ApolloServer } from '@apollo/server';
-import type { BaseContext } from '@apollo/server';
-import { typeDefs } from '$lib/graphql/schema';
-import { resolvers } from '$lib/graphql/resolvers';
+import { startServerAndCreateSvelteKitHandler } from 'apollo-server-integration-svelte';
+import { gql } from 'graphql-tag';
 import type { RequestHandler } from './$types';
 
-const server = new ApolloServer<BaseContext>({
-  typeDefs,
+const resolvers = {
+  Query: {
+    hello: () => 'world',
+  },
+};
+
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
+
+const server = new ApolloServer({
   resolvers,
+  typeDefs,
 });
 
-export const POST: RequestHandler = startServerAndCreateSvelteKitHandler(server);
 export const GET: RequestHandler = startServerAndCreateSvelteKitHandler(server);
+export const POST: RequestHandler = startServerAndCreateSvelteKitHandler(server);
+```
+You may also pass a context function to `startServerAndCreateSvelteKitHandler` as such:
+```typescript
+export const GET: RequestHandler = startServerAndCreateSvelteKitHandler(server, {
+  context: async (event) => ({ event, user: await getLoggedInUser(event) }),
+});
+
+export const POST: RequestHandler = startServerAndCreateSvelteKitHandler(server, {
+  context: async (event) => ({ event, user: await getLoggedInUser(event) }),
+});
+```
+The SvelteKit `RequestEvent` object is passed along to the context function.
+
+## Typescript
+
+When using this integration with SvelteKit, you can specify the type of the context object using the generic type parameter:
+
+```typescript
+import type { RequestEvent } from '@sveltejs/kit';
+
+// The context object will have the type { event: RequestEvent, user: User }
+const handler = startServerAndCreateSvelteKitHandler<{ event: RequestEvent; user: User }>(server, {
+  context: async (event) => ({ event, user: await getLoggedInUser(event) }),
+});
 ```
 
-3. Create your GraphQL schema and resolvers in separate files, such as `src/lib/graphql/schema.ts` and `src/lib/graphql/resolvers.ts`.
-
-4. Start your SvelteKit development server:
-
-```bash
-npm run dev
-```
-
-5. Access your GraphQL endpoint at `http://localhost:5173/graphql` (or the appropriate URL based on your SvelteKit configuration).
-
+This ensures that the context object has the correct type signature.
 ## API
 
 ### `startServerAndCreateSvelteKitHandler(server, options?)`
