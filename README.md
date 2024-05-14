@@ -22,8 +22,8 @@ npm install apollo-server-integration-svelte
 ```typescript
 import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateSvelteKitHandler } from 'apollo-server-integration-svelte';
+import type { RequestHandler } from 'apollo-server-integration-svelte';
 import { gql } from 'graphql-tag';
-import type { RequestHandler } from './$types';
 
 const resolvers = {
   Query: {
