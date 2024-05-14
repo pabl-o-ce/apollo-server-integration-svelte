@@ -15,7 +15,7 @@ npm install apollo-server-integration-svelte
 
 ## Getting started
 
-1. Create a new file named `+server.ts` inside the `src/routes/graphql` directory of your SvelteKit project.
+1. Create a new file named `+server.ts` inside the `src/routes/api/graphql` directory of your SvelteKit project.
 
 2. Import the necessary modules and define your GraphQL schema and resolvers:
 
