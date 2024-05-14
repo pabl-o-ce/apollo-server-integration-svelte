@@ -49,18 +49,10 @@ export function startServerAndCreateSvelteKitHandler<Context extends BaseContext
       headers[key] = value;
     }
 
-    if (isSvelteApiRequest(event)) {
-      return new Response(body.join(''), {
+    return new Response(body.join(''), {
         headers,
         status: httpGraphQLResponse.status || 200,
-      });
-    } else {
-      return {
-        status: httpGraphQLResponse.status || 200,
-        headers,
-        body: body.join(''),
-      };
-    }
+    });
   }
 
   return handler;
