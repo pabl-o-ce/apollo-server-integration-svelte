@@ -34,21 +34,15 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 9
-          run_install: false
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          registry-url: 'https://registry.npmjs.org/'
-          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: npm ci
       - name: Build
-        run: pnpm run build
+        run: npm run build
       - name: Publish to npm
-        shell: bash
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
