@@ -14,10 +14,16 @@ const defaultContext: ContextFunction<[], any> = async () => ({});
 
 export type RequestHandler = (event: RequestEvent) => Promise<Response>;
 
+let serverStarted = false;
+
 export function startServerAndCreateSvelteKitHandler<Context extends BaseContext = object>(
   server: ApolloServer<Context>,
   options?: Options<Context>
 ) {
+  if (!serverStarted) {
+    server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests();
+    serverStarted = true;
+  }
   server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests();
 
   const contextFunction = options?.context || defaultContext;
