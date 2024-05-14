@@ -12,7 +12,7 @@ interface Options<Context extends BaseContext> {
 
 const defaultContext: ContextFunction<[], any> = async () => ({});
 
-export type RequestSvelteHandler = (event: RequestEvent) => Promise<Response>;
+export type RequestHandler = (event: RequestEvent) => Promise<Response>;
 
 export function startServerAndCreateSvelteKitHandler<Context extends BaseContext = object>(
   server: ApolloServer<Context>,
