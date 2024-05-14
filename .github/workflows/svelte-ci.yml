@@ -35,9 +35,6 @@ jobs:
   publish-npm:
     if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        node-version: [20]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
@@ -45,7 +42,7 @@ jobs:
           version: 9
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: lts/*
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
@@ -53,6 +50,7 @@ jobs:
       - name: Build
         run: pnpm run build
       - name: Publish to npm
-        run: pnpm publish --no-git-checks
+        shell: bash
+        run: pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
