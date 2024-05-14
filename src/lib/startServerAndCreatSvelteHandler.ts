@@ -12,7 +12,9 @@ interface Options<Context extends BaseContext> {
 
 const defaultContext: ContextFunction<[], any> = async () => ({});
 
-function startServerAndCreateSvelteKitHandler<Context extends BaseContext = object>(
+export type RequestSvelteHandler = (event: RequestEvent) => Promise<Response>;
+
+export function startServerAndCreateSvelteKitHandler<Context extends BaseContext = object>(
   server: ApolloServer<Context>,
   options?: Options<Context>
 ) {
@@ -29,7 +31,7 @@ function startServerAndCreateSvelteKitHandler<Context extends BaseContext = obje
         body: await getBody(event),
         headers: getHeaders(event),
         method: request.method,
-        search: parse(request.url).search || '',
+        search: new URL(request.url).search || '',
       },
     });
 
@@ -63,5 +65,3 @@ function startServerAndCreateSvelteKitHandler<Context extends BaseContext = obje
 
   return handler;
 }
-
-export { startServerAndCreateSvelteKitHandler };
