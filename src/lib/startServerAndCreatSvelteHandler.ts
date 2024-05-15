@@ -34,7 +34,7 @@ export function startServerAndCreateSvelteKitHandler<Context extends BaseContext
     const httpGraphQLResponse = await server.executeHTTPGraphQLRequest({
       context: () => contextFunction(event),
       httpGraphQLRequest: {
-        body: await getBody(event),
+        body: await getBody(event) ?? '',
         headers: getHeaders(event),
         method: request.method,
         search: new URL(request.url).search || '',
