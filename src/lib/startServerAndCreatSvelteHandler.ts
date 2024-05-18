@@ -1,10 +1,8 @@
 import { ApolloServer } from '@apollo/server';
 import type { BaseContext, ContextFunction } from '@apollo/server';
 import type { RequestEvent } from '@sveltejs/kit';
-import { parse } from 'url';
 import { getBody } from './getBody.js';
 import { getHeaders } from './getHeaders.js';
-import { isSvelteApiRequest } from './isSvelteApiRequest.js';
 
 interface Options<Context extends BaseContext> {
   context?: ContextFunction<[RequestEvent], Context>;
@@ -14,16 +12,11 @@ const defaultContext: ContextFunction<[], any> = async () => ({});
 
 export type RequestHandler = (event: RequestEvent) => Promise<Response>;
 
-let serverStarted = false;
-
 export function startServerAndCreateSvelteKitHandler<Context extends BaseContext = object>(
   server: ApolloServer<Context>,
   options?: Options<Context>
 ) {
-  if (!serverStarted) {
-    server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests();
-    serverStarted = true;
-  }
+  
   server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests();
 
   const contextFunction = options?.context || defaultContext;
@@ -34,10 +27,10 @@ export function startServerAndCreateSvelteKitHandler<Context extends BaseContext
     const httpGraphQLResponse = await server.executeHTTPGraphQLRequest({
       context: () => contextFunction(event),
       httpGraphQLRequest: {
-        body: await getBody(event) ?? '',
+        body: await getBody(event),
         headers: getHeaders(event),
-        method: request.method,
-        search: new URL(request.url).search || '',
+        method: request.method || 'POST',
+        search: request.url ? new URL(request.url).search || '' : '',
       },
     });
 
